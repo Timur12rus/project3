@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class Sensor implements Serializable {
     // реализуем интерфейс Serializable, потому что в классе Measurement, в котором мы ссылаемся на Sensor
     // мы в качестве ключа у Sensor'а используем поле name, т.е. мы выстраиваем связь "ОДИН КО МНОГИМ" не на
-    // основании первичного ключа у Sensor'а(поле id), а на основании поля "name"
+    // основании первичного ключа у Sensor'а (поле id), а на основании поля "name"
 
     @Id
     @Column(name = "id")

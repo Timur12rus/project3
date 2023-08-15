@@ -1,5 +1,8 @@
 package com.timgapps.project3.dto;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 // класс DTO (Data Transfer Object)
 // специальный класс, который будет служить для общения с клиентом
 public class SensorDTO {
@@ -12,6 +15,15 @@ public class SensorDTO {
 
     // DTO используется на уровне контроллера и мы не должны глубже заходить с DTO
 
+    @NotEmpty(message = "Should not be empty")
+    @Size(min = 3, max = 30, message = "Name should be between 2 and 30")
+    private String name;
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }

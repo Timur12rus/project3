@@ -7,9 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class SensorService {
-    private SensorRepository sensorRepository;
+    private final SensorRepository sensorRepository;
 
     @Autowired
     public SensorService(SensorRepository sensorRepository) {
@@ -19,7 +18,7 @@ public class SensorService {
     // метод будет принимать из контроллера от клиента объект класса Sensor и будет сохранять его в базу данных
     @Transactional
     public void save(Sensor sensor) {
-        enrichSensor(sensor);
+//        enrichSensor(sensor);
         sensorRepository.save(sensor);
     }
 

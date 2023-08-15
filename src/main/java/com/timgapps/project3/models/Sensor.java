@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "Sensor")
+@Table(name = "sensor")
 public class Sensor implements Serializable {
     // реализуем интерфейс Serializable, потому что в классе Measurement, в котором мы ссылаемся на Sensor
     // мы в качестве ключа у Sensor'а используем поле name, т.е. мы выстраиваем связь "ОДИН КО МНОГИМ" не на

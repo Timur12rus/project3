@@ -4,7 +4,7 @@ import com.timgapps.project3.dto.SensorDTO;
 import com.timgapps.project3.models.Sensor;
 import com.timgapps.project3.services.SensorService;
 import com.timgapps.project3.util.SensorErrorResponse;
-import com.timgapps.project3.util.SensorNotCreatedException;
+import com.timgapps.project3.util.NotCreatedException;
 import com.timgapps.project3.util.SensorNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class SensorsController {
 
             // теперь когда мы подготовили сообщение об ошибке
             // мы должны выбросить исключение и должны отправить сообщение с этой ошибкой
-            throw new SensorNotCreatedException(errorMessage.toString());
+            throw new NotCreatedException(errorMessage.toString());
         }
 
         // теперь конвертируем DTO в модель нашей сущности Sensor

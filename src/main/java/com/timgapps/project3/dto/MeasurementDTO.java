@@ -4,7 +4,10 @@ package com.timgapps.project3.dto;
 // класс DTO (Data Transfer Object)
 // специальный класс, который будет служить для общения с клиентом
 
-public class MeasurementDto {
+import javax.persistence.Id;
+import java.time.LocalDateTime;
+
+public class MeasurementDTO {
 
     // здесь будем описывать те поля, которые будут приходить от клиента, и которые мы будем клиенту отправлять
     // добавим аннотации для проверки соответствия полей модели данным из запроса приходящего от клиента
@@ -14,6 +17,11 @@ public class MeasurementDto {
     // id назначается сервером
 
     // DTO используется на уровне контроллера и мы не должны глубже заходить с DTO
+
+    private boolean isRaining;
+
+    private double value;
+
 
 
 }

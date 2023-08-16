@@ -47,14 +47,13 @@ public class MeasurementsController {
                         .append(" - ")
                         .append(";");
             }
-            // теперь когда мы подготовили сообщение об ошибке мы должны выбросить исклчение
+            // теперь когда мы подготовили сообщение об ошибке мы должны выбросить исключение
             throw new NotCreatedException(errorMessage.toString());
         }
         //  теперь конвертируем DTO в модель
         measurementService.save(convertToMeasurement(measurementDTO));
 
         return ResponseEntity.ok(HttpStatus.OK);
-
     }
 
     private Measurement convertToMeasurement(MeasurementDTO measurementDTO) {

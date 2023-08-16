@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 public class MeasurementService {
     private MeasurementRepository measurementRepository;
@@ -23,6 +25,6 @@ public class MeasurementService {
 
     private void enrichMeasurement(Measurement measurement) {
         // TODO enrichMeasurement
-//        measurement
+        measurement.setDateTime(LocalDateTime.now());
     }
 }

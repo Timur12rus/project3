@@ -61,4 +61,9 @@ public class MeasurementsController {
         // полем "name" в модели
         return modelMapper.map(measurementDTO, Measurement.class);  // маппим measurementDTO в модель Measurement
     }
+
+    // TODO addValue()
+    // TODO getAllMeasurements()
+    // TODO getRainingDays()
+
 }

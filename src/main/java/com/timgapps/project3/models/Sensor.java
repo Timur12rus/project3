@@ -21,6 +21,13 @@ public class Sensor implements Serializable {
     @Size(min = 3, max = 30, message = "Название сенсора должно быть от 3 до 30 символов")
     private String name;
 
+    public Sensor() {
+    }
+
+    public Sensor(String name) {
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

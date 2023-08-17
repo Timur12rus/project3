@@ -16,7 +16,7 @@ public class SensorDTO {
     // DTO используется на уровне контроллера и мы не должны глубже заходить с DTO
 
     @NotEmpty(message = "Should not be empty")
-    @Size(min = 3, max = 30, message = "Name should be between 2 and 30")
+    @Size(min = 3, max = 30, message = "Name should be between 3 and 30")
     private String name;
 
     public String getName() {

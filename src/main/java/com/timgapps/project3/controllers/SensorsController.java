@@ -6,6 +6,7 @@ import com.timgapps.project3.services.SensorService;
 import com.timgapps.project3.util.SensorErrorResponse;
 import com.timgapps.project3.util.NotCreatedException;
 import com.timgapps.project3.util.SensorNotFoundException;
+import com.timgapps.project3.util.SensorValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,53 +15,51 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+
+import static com.timgapps.project3.util.ErrorsUtil.returnErrorsToClient;
 
 @RestController
 @RequestMapping("/sensors")
 public class SensorsController {
 
     private final SensorService sensorService;
-
     private final ModelMapper modelMapper;
+    private final SensorValidator sensorValidator;
 
     @Autowired
-    public SensorsController(SensorService sensorService, ModelMapper modelMapper) {
+    public SensorsController(SensorService sensorService, ModelMapper modelMapper, SensorValidator sensorValidator) {
         this.sensorService = sensorService;
         this.modelMapper = modelMapper;
+        this.sensorValidator = sensorValidator;
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<HttpStatus> create(@RequestBody SensorDTO sensorDTO,
+    public ResponseEntity<HttpStatus> create(@RequestBody @Valid SensorDTO sensorDTO,
                                              BindingResult bindingResult) {
         // помечаем параметр с помощью аннотации @RequestBody, когда мы пришлем JSON в этот метод контроллера
         // @RequestBody автоматически сконвертирует его в объект класса sensorDTO
         // аннотация @Valid будет проверять на валидность наш сенсор
         // по аннотации проверки в DTO (SensorDTO)
 
+        Sensor sensorToAdd = convertToSensor(sensorDTO);
+
+        // валидируем(используем Spring validator), т.к. по условию не должно быть сенсоров с одинаковым
+        // именем.
+        // Мы хотим сразу отправлять ошибку, если клиент пытается добавить сенсор, который существует в таблице сенсоров
+        sensorValidator.validate(sensorToAdd, bindingResult);
+
+
         // если в bindingResult есть какие-то ошибки, значит клиент прислал нам какой-то невалидный сенсор
-        // и выкинем исключение
+        // и выкинем исключение (они есть либо при получении от клиента, либо при валидации в методе validate()
         if (bindingResult.hasErrors()) {
-            // здесь ошибки валидации мы совместим в одну большую строку
-            // эту строку мы хотим отправить обратно клиенту, чтобы он посмотрел и смог исправить данные о сенсоре
-            StringBuilder errorMessage = new StringBuilder();
+            returnErrorsToClient(bindingResult);
+            // теперь конвертируем DTO в модель нашей сущности Sensor
+            sensorService.save(sensorToAdd);
 
-            List<FieldError> errors = bindingResult.getFieldErrors();  // добавим ошибки в List
-            for (FieldError error : errors) {
-                errorMessage.append(error.getField()) // на каком поле была получена ошибка
-                        .append(" - ")
-                        .append(";");
-            }
-
-            // теперь когда мы подготовили сообщение об ошибке
-            // мы должны выбросить исключение и должны отправить сообщение с этой ошибкой
-            throw new NotCreatedException(errorMessage.toString());
+            return ResponseEntity.ok(HttpStatus.OK);
         }
-
-        // теперь конвертируем DTO в модель нашей сущности Sensor
-        sensorService.save(convertToSensor(sensorDTO));
-
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     private Sensor convertToSensor(SensorDTO sensorDTO) {
@@ -68,6 +67,17 @@ public class SensorsController {
         // полем "name" модели)
         return modelMapper.map(sensorDTO, Sensor.class);   // маппим SensorDTO в модель Sensor
         // ModelMapper берет на себя полностью маппинг между DTO и моделью
+    }
+
+    @ExceptionHandler
+    ResponseEntity<SensorErrorResponse> handleException(NotCreatedException e) {
+        SensorErrorResponse response = new SensorErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+
+        // в HTTP ответе тело ответа (response) и статус в заголовке
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler

@@ -3,20 +3,15 @@ package com.timgapps.project3.controllers;
 import com.timgapps.project3.dto.SensorDTO;
 import com.timgapps.project3.models.Sensor;
 import com.timgapps.project3.services.SensorService;
-import com.timgapps.project3.util.SensorErrorResponse;
-import com.timgapps.project3.util.NotCreatedException;
-import com.timgapps.project3.util.SensorNotFoundException;
-import com.timgapps.project3.util.SensorValidator;
+import com.timgapps.project3.util.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 import static com.timgapps.project3.util.ErrorsUtil.returnErrorsToClient;
 
@@ -50,16 +45,14 @@ public class SensorsController {
         // Мы хотим сразу отправлять ошибку, если клиент пытается добавить сенсор, который существует в таблице сенсоров
         sensorValidator.validate(sensorToAdd, bindingResult);
 
-
         // если в bindingResult есть какие-то ошибки, значит клиент прислал нам какой-то невалидный сенсор
         // и выкинем исключение (они есть либо при получении от клиента, либо при валидации в методе validate()
         if (bindingResult.hasErrors()) {
             returnErrorsToClient(bindingResult);
-            // теперь конвертируем DTO в модель нашей сущности Sensor
-            sensorService.save(sensorToAdd);
-
-            return ResponseEntity.ok(HttpStatus.OK);
         }
+        // теперь конвертируем DTO в модель нашей сущности Sensor
+        sensorService.register(sensorToAdd);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     private Sensor convertToSensor(SensorDTO sensorDTO) {
@@ -70,28 +63,28 @@ public class SensorsController {
     }
 
     @ExceptionHandler
-    ResponseEntity<SensorErrorResponse> handleException(NotCreatedException e) {
-        SensorErrorResponse response = new SensorErrorResponse(
+    ResponseEntity<MeasurementErrorResponse> handleException(MeasurementException e) {
+        MeasurementErrorResponse response = new MeasurementErrorResponse(
+                // в ErrorResponse передается сообщение из нашего исключения MeasurementException
                 e.getMessage(),
-                System.currentTimeMillis()
+                System.currentTimeMillis()  // и текущее время в миллисекундах
         );
-
+        // этот респонс здесь конструируется и возвращается обратно клиенту, со статусом "BAD_REQUEST" (400)
         // в HTTP ответе тело ответа (response) и статус в заголовке
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     // метод обрабатывает исключение
-    private ResponseEntity<SensorErrorResponse> handleException(SensorNotFoundException e) {
+    private ResponseEntity<MeasurementErrorResponse> handleException(SensorNotFoundException e) {
         // создаем наш response(объект, который мы хотим вернуть человеку (пользователю)
-        SensorErrorResponse sensorErrorResponse = new SensorErrorResponse(
+        MeasurementErrorResponse measurementErrorResponse = new MeasurementErrorResponse(
                 "Sensor with this name wasn't found!",
                 System.currentTimeMillis()
         );
 
         // В Http ответе тело ответа(response) и статус в загаловке
-        return new ResponseEntity<>(sensorErrorResponse, HttpStatus.NOT_FOUND); // NOT_FOUND - 404 статус
+        return new ResponseEntity<>(measurementErrorResponse, HttpStatus.NOT_FOUND); // NOT_FOUND - 404 статус
     }
-
 }
 

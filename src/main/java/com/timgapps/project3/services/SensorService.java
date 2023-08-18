@@ -20,9 +20,9 @@ public class SensorService {
 
     // метод будет принимать из контроллера от клиента объект класса Sensor и будет сохранять его в базу данных
     @Transactional
-    public void save(Sensor sensor) {
+    public void register(Sensor sensor) {
 //        enrichSensor(sensor);
-        sensorRepository.save(sensor);
+        sensorRepository.save(sensor);  // сохраним в таблице БД
     }
 
     // возвращается Optional(либо есть сенсор либо нет)

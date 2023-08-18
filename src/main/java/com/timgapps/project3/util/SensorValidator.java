@@ -28,6 +28,7 @@ public class SensorValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
+        // валилируем, что такой сенсор уже есть в базе данных
         Sensor sensor = (Sensor) o;
 
         if (sensorService.findByName(sensor.getName()).isPresent()) {

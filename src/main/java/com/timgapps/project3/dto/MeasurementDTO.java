@@ -7,6 +7,7 @@ package com.timgapps.project3.dto;
 import com.timgapps.project3.models.Sensor;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
@@ -22,36 +23,36 @@ public class MeasurementDTO {
     // DTO используется на уровне контроллера и мы не должны глубже заходить с DTO
 
     @NotEmpty
-    private boolean raining;
+    @Size(min = -100, max = 100, message = "Value should be between -100 and 100")
+    private Double value;
 
     @NotEmpty
-    @Size(min = -100, max = 100, message = "Value should be between -100 and 100")
-    private double value;
+    private Boolean isRaining;
 
-    @NotEmpty(message = "Should not be empty")
-    private Sensor sensor;
+    @NotNull
+    private SensorDTO sensor;
 
-    public boolean isRaining() {
-        return raining;
+    public boolean getRaining() {
+        return isRaining;
     }
 
-    public void setRaining(boolean raining) {
-        this.raining = raining;
+    public void setRaining(boolean isRaining) {
+        this.isRaining = isRaining;
     }
 
-    public double getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 
-    public Sensor getSensor() {
+    public SensorDTO getSensor() {
         return sensor;
     }
 
-    public void setSensor(Sensor sensor) {
+    public void setSensor(SensorDTO sensor) {
         this.sensor = sensor;
     }
 }

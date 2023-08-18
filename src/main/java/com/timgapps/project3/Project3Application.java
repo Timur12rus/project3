@@ -18,9 +18,5 @@ public class Project3Application {
         return new ModelMapper();
     }
 
-    @Bean
-    public SensorValidator sensorValidator() {
-        return new SensorValidator();
-    }
 
 }

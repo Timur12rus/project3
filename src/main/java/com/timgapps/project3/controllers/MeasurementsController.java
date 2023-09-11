@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.timgapps.project3.util.ErrorsUtil.returnErrorsToClient;
@@ -96,6 +95,4 @@ public class MeasurementsController {
         // В Http ответе тело ответа(response) и статус в загаловке
         return new ResponseEntity<>(measurementErrorResponse, HttpStatus.NOT_FOUND); // NOT_FOUND - 404 статус
     }
-
-
 }

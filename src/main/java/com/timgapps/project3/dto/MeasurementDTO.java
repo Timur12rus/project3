@@ -4,8 +4,6 @@ package com.timgapps.project3.dto;
 // класс DTO (Data Transfer Object)
 // специальный класс, который будет служить для общения с клиентом
 
-import com.timgapps.project3.models.Sensor;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,17 +25,17 @@ public class MeasurementDTO {
     private Double value;
 
     @NotEmpty
-    private Boolean isRaining;
+    private Boolean raining;
 
     @NotNull
     private SensorDTO sensor;
 
     public boolean getRaining() {
-        return isRaining;
+        return raining;
     }
 
     public void setRaining(boolean isRaining) {
-        this.isRaining = isRaining;
+        this.raining = isRaining;
     }
 
     public Double getValue() {

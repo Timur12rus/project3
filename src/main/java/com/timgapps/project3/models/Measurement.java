@@ -1,9 +1,9 @@
 package com.timgapps.project3.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,13 +16,15 @@ public class Measurement {
     private Integer id;
 
     @Column(name = "value")
-    @Size(min = -100, max = 100, message = "Value should be between -100 and 100")
+//    @Size(min = -100, max = 100, message = "Value should be between -100 and 100")
     @NotNull
+    @Min(-100)
+    @Max(100)
     private Double value;
 
     @Column(name = "raining")
-    @NotEmpty
-    private boolean raining;
+    @NotNull
+    private Boolean raining;
 
     @Column(name = "measurement_date_time")
     @NotNull
@@ -51,11 +53,11 @@ public class Measurement {
     }
 
     // Jackson смотрит на название геттера, отсекает is и оставляет название поля
-    public boolean isRaining() {
+    public Boolean isRaining() {
         return raining;
     }
 
-    public void setRaining(boolean raining) {
+    public void setRaining(Boolean raining) {
         this.raining = raining;
     }
 
